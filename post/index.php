@@ -1,16 +1,7 @@
 <?php
 session_start();
 
-$host = 'mysql:dbname=test01;host=localhost;charset=utf8mb4';
-$user = 'root';
-$password = 'root';
-try{
-    $pdo = new PDO($host,$user,$password);
-    // echo '接続成功';
-} catch(PDOException $e){
-    echo '接続失敗' . $e->getMessage() . "\n";
-    exit();
-}
+require('connect.php');
 
 function h($s) {
     return htmlspecialchars($s);
@@ -20,8 +11,8 @@ $error = '';
 
 $token = filter_input(INPUT_POST, 'token');
 
-echo $_SESSION['token'] . '<br>' ;
-echo $token;
+// echo $_SESSION['token'] . '<br>' ;
+// echo $token;
 
 if ($_SESSION['token'] === $token) {
     if($_POST){
@@ -44,12 +35,12 @@ if ($_SESSION['token'] === $token) {
             $stmt->execute();
         }
     }
-}
+} 
 
 $contents = $pdo->prepare("SELECT * FROM post order by time DESC");
 $contents->execute();
 
-$token = sha1(mt_rand()); //create a rundom number
+$token = sha1(mt_rand());
 $_SESSION['token'] = $token;
 
 
@@ -103,6 +94,7 @@ $_SESSION['token'] = $token;
                 <div class="id-time">
                     <span>No：<?php echo $content['id']?></span>
                     <span><?php echo $content['time']?></span>
+                    <span><a href="delete.php?id=<?php echo h($content['id']); ?>">[削除]</a></span>
                 </div>
                 <div>名前：<?php echo $content['name']?></div>
                 <div>投稿内容：<?php echo $content['contents']?></div>

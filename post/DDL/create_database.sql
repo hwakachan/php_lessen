@@ -1,0 +1,1 @@
+create database test01 character set utf8;
